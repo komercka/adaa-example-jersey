@@ -3,7 +3,7 @@ package cz.kb.openbanking.adaa.example.web.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.jsonwebtoken.lang.Assert;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -35,8 +35,12 @@ public class ClientIdDto {
      */
     @JsonCreator
     public ClientIdDto(@JsonProperty("client_id") String clientId, @JsonProperty("client_secret") String clientSecret) {
-        Assert.hasText(clientId, "clientId must not be empty");
-        Assert.hasText(clientSecret, "clientSecret must not be empty");
+        if (StringUtils.isBlank(clientId)) {
+            throw new IllegalArgumentException("clientId must not be empty");
+        }
+        if (StringUtils.isBlank(clientSecret)) {
+            throw new IllegalArgumentException("clientSecret must not be empty");
+        }
 
         this.clientId = clientId;
         this.clientSecret = clientSecret;

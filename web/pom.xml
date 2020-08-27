@@ -11,6 +11,7 @@
 
     <packaging>war</packaging>
     <artifactId>web</artifactId>
+    <name>ADAA API example (web)</name>
 
     <dependencies>
         <dependency>
@@ -53,6 +54,16 @@
             <artifactId>oauth2-client</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.iban4j</groupId>
+            <artifactId>iban4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+
         <!-- MAPSRUCT -->
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -81,14 +92,6 @@
                     <httpConnector>
                         <port>8888</port>
                     </httpConnector>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>9</source>
-                    <target>9</target>
                 </configuration>
             </plugin>
         </plugins>

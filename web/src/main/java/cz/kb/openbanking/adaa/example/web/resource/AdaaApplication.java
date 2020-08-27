@@ -1,11 +1,11 @@
 package cz.kb.openbanking.adaa.example.web.resource;
 
+import java.util.logging.Logger;
+import javax.ws.rs.ApplicationPath;
+
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.mvc.freemarker.FreemarkerMvcFeature;
-
-import javax.ws.rs.ApplicationPath;
-import java.util.logging.Logger;
 
 /**
  * Application's entry point.
@@ -25,6 +25,7 @@ public class AdaaApplication extends ResourceConfig {
         register(AuthorizationResource.class);
         register(TransactionHistoryResource.class);
         register(ClientRegistrationResource.class);
+        register(AccountStatementsResource.class);
 
         // register Freemarker MVC support components
         register(FreemarkerMvcFeature.class);

@@ -56,7 +56,7 @@ public class ClientRegistrationResource {
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final Aes256DecryptionService DECRYPTION_SERVICE = new Aes256DecryptionServiceImpl();
     private static final SoftwareStatementsApi softwareStatementsApi =
-            new SoftwareStatementsJerseyImpl(getSoftwareStatementUri(), getApiKey(), getClientWithCertificate(null));
+        new SoftwareStatementsJerseyImpl(getSoftwareStatementUri(), getApiKey(), getClientWithCertificate(null));
 
     @Context
     private UriInfo uriInfo;
@@ -92,10 +92,10 @@ public class ClientRegistrationResource {
         SoftwareStatement request = getSoftwareStatement(softwareName);
 
         Jwt jwt = softwareStatementsApi.softwareStatement(request);
-
         ClientRegistrationRequest clientRegistrationRequest = new ClientRegistrationRequest(softwareName, null,
-                "web", Collections.singletonList(getOauthRedirectUri()), Collections.singletonList("adaa"),
-                jwt.getToken(), getSecretKey());
+            "web", Collections.singletonList(OAuth2FlowProvider.getOauthRedirectUri(uriInfo.getBaseUri())),
+            Collections.singletonList("adaa"),
+            jwt.getToken(), getSecretKey());
         byte[] registrationRequest;
         try {
             registrationRequest = mapper.writeValueAsString(clientRegistrationRequest).getBytes(StandardCharsets.UTF_8);
@@ -108,6 +108,29 @@ public class ClientRegistrationResource {
                                         .queryParam("registrationRequest", Base64.getEncoder().encodeToString(registrationRequest))
                                         .build();
         return Response.seeOther(registrationUri).build();
+    }
+
+    /**
+     * Gets {@link SoftwareStatement}.
+     *
+     * @param softwareName name of application
+     * @return {@link SoftwareStatement}
+     */
+    private SoftwareStatement getSoftwareStatement(String softwareName) {
+        if (StringUtils.isBlank(softwareName)) {
+            throw new IllegalArgumentException("softwareName must not be empty");
+        }
+
+        URI baseUri = uriInfo.getBaseUri();
+        SoftwareStatement request = new SoftwareStatement(softwareName, "softwareId", "1.0",
+            Collections.singletonList(OAuth2FlowProvider.getOauthRedirectUri(baseUri)),
+            baseUri.toString() + EndpointUris.CLIENT_REGISTRATION_URI);
+        request.setSoftwareUri(baseUri.toString());
+        request.setTokenEndpointAuthMethod(TokenEndpointAuthMethodEnum.CLIENT_SECRET_POST);
+        request.setGrantTypes(Collections.singletonList(GrantTypesEnum.AUTHORIZATION_CODE));
+        request.setResponseTypes(Collections.singletonList(ResponseTypesEnum.CODE));
+
+        return request;
     }
 
     /**
@@ -137,44 +160,11 @@ public class ClientRegistrationResource {
         } catch (IOException e) {
             throw new IllegalStateException("Cannot parse client registration's data.", e);
         }
-        ClientIdentifier clientIdentifier =
-                new ClientIdentifier(clientIdDto.getClientId(), clientIdDto.getClientSecret());
+        ClientIdentifier clientIdentifier = new ClientIdentifier(clientIdDto.getClientId(), clientIdDto.getClientSecret());
         OAuth2FlowProvider.setClientIdentifier(clientIdentifier);
 
         // registration is finished -> now redirect client to get the authorization code
-        return authorizationRedirect(getOauthRedirectUri());
+        return authorizationRedirect(uriInfo.getBaseUri());
     }
 
-    /**
-     * Gets {@link SoftwareStatement}.
-     *
-     * @param softwareName name of application
-     * @return {@link SoftwareStatement}
-     */
-    private SoftwareStatement getSoftwareStatement(String softwareName) {
-        if (StringUtils.isBlank(softwareName)) {
-            throw new IllegalArgumentException("softwareName must not be empty");
-        }
-
-        SoftwareStatement request = new SoftwareStatement(softwareName, "softwareId", "1.0",
-                Collections.singletonList(getOauthRedirectUri()),
-                uriInfo.getBaseUri().toString() + EndpointUris.CLIENT_REGISTRATION_URI);
-        request.setSoftwareUri(uriInfo.getBaseUri().toString());
-        request.setTokenEndpointAuthMethod(TokenEndpointAuthMethodEnum.CLIENT_SECRET_POST);
-        request.setGrantTypes(Collections.singletonList(GrantTypesEnum.AUTHORIZATION_CODE));
-        request.setResponseTypes(Collections.singletonList(ResponseTypesEnum.CODE));
-
-        return request;
-    }
-
-    /**
-     * Gets redirect URI into OAuth2 (for getting authorization code).
-     * This URI must be fill in software statement and client registration.
-     *
-     * @return redirect URI
-     */
-    private String getOauthRedirectUri() {
-        return UriBuilder.fromUri(uriInfo.getBaseUri()).path(EndpointUris.AUTHORIZATION_OAUTH2_URI)
-                         .build().toString();
-    }
 }
