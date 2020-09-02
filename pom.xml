@@ -28,8 +28,14 @@
         <mapstruct.version>1.2.0.Final</mapstruct.version>
     </properties>
 
-    <dependencyManagement>
+    <scm>
+        <connection>scm:git:git@github.com:komercka/adaa-example-jersey.git</connection>
+        <developerConnection>scm:git:git@github.com:komercka/adaa-example-jersey.git</developerConnection>
+        <url>https://github.com/komercka/adaa-example-jersey</url>
+        <tag>v@{project.version}</tag>
+    </scm>
 
+    <dependencyManagement>
         <dependencies>
             <!--INTERNAL-->
             <dependency>
@@ -153,7 +159,6 @@
                 <scope>test</scope>
             </dependency>
         </dependencies>
-
     </dependencyManagement>
 
     <build>
@@ -165,6 +170,17 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <goals>pre-integration-test</goals>
+                    <preparationGoals>package</preparationGoals>
+                    <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
         </plugins>
