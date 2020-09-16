@@ -5,7 +5,6 @@ import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.g
 import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getCurrency;
 import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getIban;
 import static cz.kb.openbanking.adaa.example.web.common.ClientCertificateProvider.getClientWithCertificate;
-import static cz.kb.openbanking.adaa.example.web.common.EndpointUris.AUTHORIZATION_OAUTH2_URI;
 import static cz.kb.openbanking.adaa.example.web.oauth2.OAuth2FlowProvider.authorizationRedirect;
 
 import java.util.Currency;
@@ -19,7 +18,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import cz.kb.openbanking.adaa.client.api.AccountApi;
@@ -29,9 +27,10 @@ import cz.kb.openbanking.adaa.client.jersey.AccountApiJerseyImpl;
 import cz.kb.openbanking.adaa.client.model.generated.AccountBalance;
 import cz.kb.openbanking.adaa.client.model.generated.AccountTransaction;
 import cz.kb.openbanking.adaa.example.web.common.EndpointUris;
-import cz.kb.openbanking.adaa.example.web.mapper.TransactionMapper;
+import cz.kb.openbanking.adaa.example.web.mapper.AccountMapper;
 import cz.kb.openbanking.adaa.example.web.model.TransactionModel;
 import cz.kb.openbanking.adaa.example.web.oauth2.OAuth2FlowProvider;
+import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.server.mvc.Template;
 import org.iban4j.Iban;
 import org.mapstruct.factory.Mappers;
@@ -44,8 +43,7 @@ import org.mapstruct.factory.Mappers;
  */
 @Path(EndpointUris.TRANSACTIONS_URI)
 public class TransactionHistoryResource {
-
-    private static final TransactionMapper mapper = Mappers.getMapper(TransactionMapper.class);
+    private static final AccountMapper mapper = Mappers.getMapper(AccountMapper.class);
 
     private final AccountApi accountApi = new AccountApiJerseyImpl(getAdaaUri(), getApiKey(),
             getClientWithCertificate(null));
@@ -64,9 +62,8 @@ public class TransactionHistoryResource {
     public Response transactions() {
         // check access token
         String accessToken = OAuth2FlowProvider.getAccessToken();
-        if (accessToken == null) {
-            String redirectUri = UriBuilder.fromUri(uriInfo.getBaseUri()).path(AUTHORIZATION_OAUTH2_URI).build().toString();
-            return authorizationRedirect(redirectUri);
+        if (StringUtils.isBlank(accessToken)) {
+            return authorizationRedirect(uriInfo.getBaseUri());
         }
 
         Account account = new Account(Iban.valueOf(getIban()), Currency.getInstance(getCurrency()));

@@ -1,5 +1,6 @@
 package cz.kb.openbanking.adaa.example.web.common;
 
+import cz.kb.openbanking.adaa.example.web.resource.AccountStatementsResource;
 import cz.kb.openbanking.adaa.example.web.resource.AuthorizationResource;
 import cz.kb.openbanking.adaa.example.web.resource.ClientRegistrationResource;
 import cz.kb.openbanking.adaa.example.web.resource.TransactionHistoryResource;
@@ -66,6 +67,11 @@ public final class EndpointUris {
      * URI to call KB login page for register application instance.
      */
     public static final String SAML_REGISTRATION = "saml/register";
+
+    /**
+     * URI to getting account statements in {@link AccountStatementsResource}.
+     */
+    public static final String STATEMENTS_URI = "statements";
 
     /**
      * No instance.

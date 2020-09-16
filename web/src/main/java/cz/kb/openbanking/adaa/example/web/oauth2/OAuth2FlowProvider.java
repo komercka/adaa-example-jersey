@@ -2,11 +2,14 @@ package cz.kb.openbanking.adaa.example.web.oauth2;
 
 import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getAccessTokenUri;
 import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getAuthorizationUri;
+import static cz.kb.openbanking.adaa.example.web.common.EndpointUris.AUTHORIZATION_OAUTH2_URI;
 
+import java.net.URI;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
+import cz.kb.openbanking.adaa.example.web.common.EndpointUris;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.oauth2.ClientIdentifier;
 import org.glassfish.jersey.client.oauth2.OAuth2ClientSupport;
@@ -46,14 +49,15 @@ public class OAuth2FlowProvider {
     /**
      * Prepare redirect response to KB OAuth2 authorization consent request.
      *
-     * @param redirectUri URI to which authorization token should be redirected
+     * @param baseUri application base URI
      * @return redirect response to KB OAuth2 authorization consent request
      */
-    public static Response authorizationRedirect(String redirectUri) {
-        if (StringUtils.isBlank(redirectUri)) {
-            throw new IllegalArgumentException("redirectUri must not be empty");
+    public static Response authorizationRedirect(URI baseUri) {
+        if (baseUri == null) {
+            throw new IllegalArgumentException("baseUri must not be null");
         }
 
+        String redirectUri = UriBuilder.fromUri(baseUri).path(AUTHORIZATION_OAUTH2_URI).build().toString();
         OAuth2CodeGrantFlow flow = OAuth2ClientSupport.authorizationCodeGrantFlowBuilder(
                 getClientIdentifier(),
                 getAuthorizationUri(),
@@ -69,6 +73,21 @@ public class OAuth2FlowProvider {
 
         // redirect user to KB OAuth2 authorization server
         return Response.seeOther(UriBuilder.fromUri(kbAuthURI).build()).build();
+    }
+
+    /**
+     * Gets redirect URI into OAuth2 (for getting authorization code).
+     * This URI must be fill in software statement and client registration.
+     *
+     * @param baseUri application base URI
+     * @return redirect URI
+     */
+    public static String getOauthRedirectUri(URI baseUri) {
+        if (baseUri == null) {
+            throw new IllegalArgumentException("baseUri must not be null");
+        }
+
+        return UriBuilder.fromUri(baseUri).path(EndpointUris.AUTHORIZATION_OAUTH2_URI).build().toString();
     }
 
     /**
