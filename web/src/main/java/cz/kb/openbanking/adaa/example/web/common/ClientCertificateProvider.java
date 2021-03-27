@@ -1,22 +1,22 @@
 package cz.kb.openbanking.adaa.example.web.common;
 
-import org.glassfish.jersey.SslConfigurator;
+import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getClientCertPassword;
+import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getKeystorePassword;
+import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getKeystorePath;
 
-import javax.annotation.Nullable;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import javax.annotation.Nullable;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 
-import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getClientCertPassword;
-import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getKeystorePassword;
-import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getKeystorePath;
+import org.glassfish.jersey.SslConfigurator;
 
 /**
  * Ensures SSL communication by adding client certificate.
@@ -33,7 +33,7 @@ public class ClientCertificateProvider {
      * otherwise - certificate will be added to input one.
      *
      * @param client JAX-RS {@link Client}
-     * @return @link Client} with set client certificate
+     * @return {@link Client} with set client certificate
      */
     public static Client getClientWithCertificate(@Nullable Client client) {
         KeyStore clientKeyStore = null;
