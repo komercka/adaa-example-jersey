@@ -85,6 +85,7 @@ public class AccountStatementsResource {
     /**
      * Endpoint that serves for downloading PDF account statement.
      *
+     * @param statementId ID of PDF statement
      * @return account statement as PDF file
      */
     @GET
