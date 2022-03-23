@@ -26,6 +26,7 @@ public class AdaaApplication extends ResourceConfig {
         register(TransactionHistoryResource.class);
         register(ClientRegistrationResource.class);
         register(AccountStatementsResource.class);
+        register(AccountResource.class);
 
         // register Freemarker MVC support components
         register(FreemarkerMvcFeature.class);

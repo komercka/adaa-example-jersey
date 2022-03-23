@@ -2,8 +2,6 @@ package cz.kb.openbanking.adaa.example.web.resource;
 
 import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getAdaaUri;
 import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getApiKey;
-import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getCurrency;
-import static cz.kb.openbanking.adaa.example.core.configuration.AdaaProperties.getIban;
 import static cz.kb.openbanking.adaa.example.web.common.ClientCertificateProvider.getClientWithCertificate;
 import static cz.kb.openbanking.adaa.example.web.oauth2.OAuth2FlowProvider.authorizationRedirect;
 
@@ -12,9 +10,9 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.Currency;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -26,7 +24,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import cz.kb.openbanking.adaa.client.api.AccountApi;
-import cz.kb.openbanking.adaa.client.api.model.Account;
 import cz.kb.openbanking.adaa.client.jersey.AccountApiJerseyImpl;
 import cz.kb.openbanking.adaa.example.web.common.EndpointUris;
 import cz.kb.openbanking.adaa.example.web.mapper.AccountMapper;
@@ -35,7 +32,6 @@ import cz.kb.openbanking.adaa.example.web.oauth2.OAuth2FlowProvider;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.server.mvc.Template;
-import org.iban4j.Iban;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -64,22 +60,29 @@ public class AccountStatementsResource {
     @Path("/list")
     @Template(name = "/statements.ftl")
     @Produces(MediaType.TEXT_HTML)
-    public Response getAccountStatements() {
+    public Response getAccountStatements(@QueryParam("accountId") String accountId) {
+        if (StringUtils.isBlank(accountId)) {
+            throw new IllegalArgumentException("accountId must not be empty");
+        }
+
         // check access token
         String accessToken = OAuth2FlowProvider.getAccessToken();
         if (StringUtils.isBlank(accessToken)) {
             return authorizationRedirect(uriInfo.getBaseUri());
         }
 
-        Account account = new Account(Iban.valueOf(getIban()), Currency.getInstance(getCurrency()));
         // get statements for last 30 days
         OffsetDateTime fromDateTime = OffsetDateTime.now(ZoneId.systemDefault()).minusDays(31).truncatedTo(ChronoUnit.DAYS);
-        List<StatementModel> statements = accountApi.statements(account, OAuth2FlowProvider.getAccessToken(), fromDateTime)
+        List<StatementModel> statements = accountApi.statements(accountId, OAuth2FlowProvider.getAccessToken(), fromDateTime)
                                                     .find().stream()
                                                     .map(mapper::toStatementModel)
                                                     .collect(Collectors.toList());
 
-        return Response.ok(Collections.singletonMap("statements", statements)).build();
+        Map<String, Object> model = new HashMap<>();
+        model.put("statements", statements);
+        model.put("accountId", accountId);
+
+        return Response.ok(model).build();
     }
 
     /**
@@ -91,9 +94,12 @@ public class AccountStatementsResource {
     @GET
     @Path("/pdf")
     @Produces("application/pdf")
-    public Response getPdfStatement(@QueryParam("id") Long statementId) {
+    public Response getPdfStatement(@QueryParam("id") Long statementId, @QueryParam("accountId") String accountId) {
         if (statementId == null) {
             throw new IllegalArgumentException("statementId must not be null");
+        }
+        if (StringUtils.isBlank(accountId)) {
+            throw new IllegalArgumentException("accountId must not be empty");
         }
 
         // check access token
@@ -102,8 +108,7 @@ public class AccountStatementsResource {
             return authorizationRedirect(uriInfo.getBaseUri());
         }
 
-        Account account = new Account(Iban.valueOf(getIban()), Currency.getInstance(getCurrency()));
-        byte[] pdfStatement = accountApi.statementPdf(account, OAuth2FlowProvider.getAccessToken(), statementId).find();
+        byte[] pdfStatement = accountApi.statementPdf(accountId, OAuth2FlowProvider.getAccessToken(), statementId).find();
         File statement = new File(statementId.toString());
         try {
             FileUtils.writeByteArrayToFile(statement, pdfStatement);

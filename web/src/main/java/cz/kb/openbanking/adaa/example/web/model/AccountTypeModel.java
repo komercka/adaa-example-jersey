@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 public enum AccountTypeModel {
 
     /**
-     * Komcercni Banka account.
+     * Komercni Banka account.
      */
     KB("KB"),
 

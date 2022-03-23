@@ -66,7 +66,12 @@
             <artifactId>jsr305</artifactId>
         </dependency>
 
-        <!-- MAPSRUCT -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
+        <!-- MAPSTRUCT -->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>

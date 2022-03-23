@@ -1,5 +1,6 @@
 package cz.kb.openbanking.adaa.example.web.common;
 
+import cz.kb.openbanking.adaa.example.web.resource.AccountResource;
 import cz.kb.openbanking.adaa.example.web.resource.AccountStatementsResource;
 import cz.kb.openbanking.adaa.example.web.resource.AuthorizationResource;
 import cz.kb.openbanking.adaa.example.web.resource.ClientRegistrationResource;
@@ -24,7 +25,7 @@ public final class EndpointUris {
     public static final String OAUTH2_PATH = "/oauth2";
 
     /**
-     * Authorization back URI to Oauth2 for getting Oauth2 authorization code.
+     * Authorization back URI to Oauth2 for getting OAuth2 authorization code.
      */
     public static final String AUTHORIZATION_OAUTH2_URI = AUTHORIZATION + OAUTH2_PATH;
 
@@ -39,7 +40,7 @@ public final class EndpointUris {
     public static final String CLIENT_REGISTRATION_PATH = "/client";
 
     /**
-     * URI to getting client id and client secret URI.
+     * URI to get client id and client secret URI.
      */
     public static final String CLIENT_REGISTRATION_URI = REGISTRATION + CLIENT_REGISTRATION_PATH;
 
@@ -59,9 +60,14 @@ public final class EndpointUris {
     public static final String SOFTWARE_STATEMENT_REGISTRATION_PATH = "/software-statement";
 
     /**
-     * URI to getting transaction history in {@link TransactionHistoryResource}.
+     * URI to get transaction history in {@link TransactionHistoryResource}.
      */
     public static final String TRANSACTIONS_URI = "transactions";
+
+    /**
+     * URI to get accounts in {@link AccountResource}.
+     */
+    public static final String ACCOUNTS = "accounts";
 
     /**
      * URI to call KB login page for register application instance.
@@ -69,7 +75,7 @@ public final class EndpointUris {
     public static final String SAML_REGISTRATION = "saml/register";
 
     /**
-     * URI to getting account statements in {@link AccountStatementsResource}.
+     * URI to get account statements in {@link AccountStatementsResource}.
      */
     public static final String STATEMENTS_URI = "statements";
 

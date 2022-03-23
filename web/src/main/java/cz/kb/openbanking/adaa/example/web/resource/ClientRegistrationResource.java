@@ -105,7 +105,7 @@ public class ClientRegistrationResource {
 
         URI registrationUri = UriBuilder.fromUri(getClientRegistrationUri())
                                         .path(EndpointUris.SAML_REGISTRATION)
-                                        .queryParam("registrationRequest", Base64.getEncoder().encodeToString(registrationRequest))
+                                        .replaceQuery("registrationRequest=" + Base64.getEncoder().encodeToString(registrationRequest))
                                         .build();
         return Response.seeOther(registrationUri).build();
     }

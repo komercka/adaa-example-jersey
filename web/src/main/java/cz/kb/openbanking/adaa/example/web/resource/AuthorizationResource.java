@@ -52,7 +52,7 @@ public class AuthorizationResource {
         OAuth2FlowProvider.setAccessToken(tokenResult.getAccessToken());
 
         // authorization is finished -> now redirecting back to the 'transactions' resource
-        URI uri = UriBuilder.fromUri(uriInfo.getBaseUri()).path(EndpointUris.TRANSACTIONS_URI).build();
+        URI uri = UriBuilder.fromUri(uriInfo.getBaseUri()).path(EndpointUris.ACCOUNTS).build();
         return Response.seeOther(uri).build();
     }
 }
