@@ -19,8 +19,6 @@ For more examples check our Github repository.
 1. Complete application properties located
 in the `./service/src/main/resources/application.properties` file:
     * `x-api-key` - authorization API key generated at [KB API Developer portal](https://api.kb.cz/open/apim/store)
-    * `iban` - account's IBAN code
-    * `currency` - account's currency
     * `client-registration-uri` - URI of the page of the KB Client Registration page
     * `software-statement-uri` - URI of the endpoint of the KB Client Registration API for getting software statement
     * `adaa-uri` - URI of the KB ADAA API

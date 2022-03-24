@@ -57,24 +57,6 @@ public class AdaaProperties {
     }
 
     /**
-     * Gets client's IBAN.
-     *
-     * @return client's IBAN
-     */
-    public static String getIban() {
-        return getProperty("iban");
-    }
-
-    /**
-     * Gets client's account currency.
-     *
-     * @return client's account currency
-     */
-    public static String getCurrency() {
-        return getProperty("currency");
-    }
-
-    /**
      * Gets URI of the endpoint of the KB Client Registration API for getting software statement.
      *
      * @return URI of the endpoint of the KB Client Registration API for getting software statement

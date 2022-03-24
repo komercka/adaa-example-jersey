@@ -36,7 +36,7 @@ public class RootResource {
                 || OAuth2FlowProvider.getClientIdentifier().getClientSecret() == null) {
             uri = UriBuilder.fromUri(uriInfo.getBaseUri()).path(EndpointUris.CLIENT_REGISTRATION_FORM_URI).build();
         } else {
-            uri = UriBuilder.fromUri(uriInfo.getBaseUri()).path(EndpointUris.TRANSACTIONS_URI).build();
+            uri = UriBuilder.fromUri(uriInfo.getBaseUri()).path(EndpointUris.ACCOUNTS).build();
         }
 
         return Response.seeOther(uri).build();
