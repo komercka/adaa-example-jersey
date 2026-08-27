@@ -2,11 +2,9 @@
 
 #### Links
 * [KB API Business portal](https://www.kb.cz/api)
-* [KB API Developer portal](https://api.kb.cz/open/apim/store)
+* [KB API Developer portal](https://developers.kb.cz/)
 * [KB ADAA API Java SDK](https://github.com/komercka/adaa-client)
 * [KB Client Registration API Java SDK](https://github.com/komercka/client-registration-client)
-* [ADAA API technical manual (for production version)](https://www.kb.cz/getmedia/ffc70c65-cc28-4809-ad47-22b7b4361ce5/ADAA_Technical_manual_EN.pdf.aspx)
-* [ADAA API technical manual (for sandbox version)](https://www.kb.cz/getmedia/3662e39f-04af-4872-bf02-eda9c05a0c11/API_Sandbox_Account-Direct-Access-API-Manual_EN.pdf.aspx)
 
 ---
 
@@ -18,7 +16,7 @@ For more examples check our Github repository.
 #### How to run
 1. Complete application properties located
 in the `./service/src/main/resources/application.properties` file:
-    * `x-api-key` - authorization API key generated at [KB API Developer portal](https://api.kb.cz/open/apim/store)
+    * `x-api-key` - authorization API key generated at [KB API Developer portal](https://developers.kb.cz/)
     * `client-registration-uri` - URI of the page of the KB Client Registration page
     * `software-statement-uri` - URI of the endpoint of the KB Client Registration API for getting software statement
     * `adaa-uri` - URI of the KB ADAA API
@@ -59,6 +57,6 @@ The whole flow of this application is described by sequence diagram below:
 ![ADAA API example application (sequence diagram)](adaa-example-sequence-diagram.svg "ADAA API example application (sequence diagram)")
 
 ---
-*For further details please read https://developers.kb.cz/service/AccountDirectAccessAPI-v2/overview.*
+*For further details please read [ADAA API Manual](https://developers.kb.cz/service/AccountDirectAccessAPI-v2/overview).*
 
 *If you still have any questions please contact a [KB API support team](mailto:api@kb.cz).*
