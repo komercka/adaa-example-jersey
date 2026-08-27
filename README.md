@@ -59,7 +59,6 @@ The whole flow of this application is described by sequence diagram below:
 ![ADAA API example application (sequence diagram)](adaa-example-sequence-diagram.svg "ADAA API example application (sequence diagram)")
 
 ---
-*For further details please read [ADAA API technical manual (for production version)](https://www.kb.cz/getmedia/ffc70c65-cc28-4809-ad47-22b7b4361ce5/ADAA_Technical_manual_EN.pdf.aspx)
-or [ADAA API technical manual (for sandbox version)](https://www.kb.cz/getmedia/3662e39f-04af-4872-bf02-eda9c05a0c11/API_Sandbox_Account-Direct-Access-API-Manual_EN.pdf.aspx).*
+*For further details please read https://developers.kb.cz/service/AccountDirectAccessAPI-v2/overview.*
 
 *If you still have any questions please contact a [KB API support team](mailto:api@kb.cz).*
